@@ -48,15 +48,6 @@ $app->singleton(
     App\Console\Kernel::class
 );
 
-$app->routeMiddleware([
-    'auth' => App\Http\Middleware\Authenticate::class,
-]);
-
-$app->routeMiddleware([
-    'cors' => App\Http\Middleware\CorsMiddleware::class
-]);
-
-
 /*
 |--------------------------------------------------------------------------
 | Register Config Files
@@ -71,6 +62,7 @@ $app->routeMiddleware([
 $app->configure('app');
 $app->configure('auth');
 $app->configure('jwt');
+$app->configure('swagger-lume');
 
 
 /*
@@ -84,13 +76,11 @@ $app->configure('jwt');
 |
 */
 
-// $app->middleware([
-//     App\Http\Middleware\ExampleMiddleware::class
-// ]);
+$app->routeMiddleware([
+    'auth' => App\Http\Middleware\Authenticate::class,
+    'cors' => App\Http\Middleware\CorsMiddleware::class,
+]);
 
-// $app->routeMiddleware([
-//     'auth' => App\Http\Middleware\Authenticate::class,
-// ]);
 
 /*
 |--------------------------------------------------------------------------
@@ -107,6 +97,8 @@ $app->configure('jwt');
 // $app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
 $app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
+$app->register(\SwaggerLume\ServiceProvider::class);
+
 
 /*
 |--------------------------------------------------------------------------

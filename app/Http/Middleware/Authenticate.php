@@ -19,17 +19,25 @@ class Authenticate
      */
     public function handle($request, Closure $next)
     {
+        error_log('Handling request: ' . $request->path());
+
         try {
             $user = JWTAuth::parseToken()->authenticate();
-            if (! $user) {
+            if (!$user) {
                 return response()->json(['error' => 'User not found'], 404);
             }
         } catch (TokenExpiredException $e) {
+            error_log('JWT Error: ' . $e->getMessage());
             return response()->json(['error' => 'Token has expired'], 401);
         } catch (TokenInvalidException $e) {
+            error_log('JWT Error: ' . $e->getMessage());
             return response()->json(['error' => 'Token is invalid'], 401);
         } catch (JWTException $e) {
+            error_log('JWT Error: ' . $e->getMessage());
             return response()->json(['error' => 'Token is absent'], 401);
+        } catch (\Exception $e) {
+            error_log('General Error: ' . $e->getMessage());
+            return response()->json(['error' => 'An error occurred'], 500);
         }
 
         return $next($request);
